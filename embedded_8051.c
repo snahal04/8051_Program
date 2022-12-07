@@ -1,3 +1,37 @@
+//19
+#include<reg52.h>
+xdata unsigned char dispcode[10] ={0xC0,0xF9,0xA4,0xB0,0x99,0x92,0x82,0xF8,0x80,0x90};
+xdata unsigned char i at 0x2008;
+unsigned char *ptr;
+sbit k1 = P3^2;
+void main()
+{
+	i=0;k1=1;
+	ptr=&dispcode[0];
+	P1 = *ptr;
+	IE = 0x81;
+	//IT0=0;
+	here: goto here;
+}
+
+void isr() interrupt 0
+{
+	i++;
+	if(i==10)
+	{
+		i=0;
+		ptr = &dispcode[i];
+		P1=*ptr;
+	}
+	else
+	{
+		ptr++;
+		P1 = *ptr;
+	}
+}
+
+
+
 /*Write a program in Embedded C for 8051 microcontroller to find the sum
 of two one -byte numbers stored at 2000H & 2001H and store the sum at 2002H.*/
 
